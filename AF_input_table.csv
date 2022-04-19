@@ -1,0 +1,21 @@
+variable,units,description,lower,median,upper,distribution,source
+AF_maize_loss,percent,seasonal maize loss by AF,99,,100,posnorm,Ignacio gruma
+af36_concentration_need,microg AF36/kg maize,optimal concentration of AF36 to be added to the fields,1,,5,posnorm,INVENTADO
+af36_distribution,mxn,cost for gruma to distribute ,20000,,50000,posnorm,INVENTADO
+36_maize_loss,percent,seasonal maize loss by AF with AF36 implementation,1,,50,posnorm,INVENTADO
+af36_purchase_price,mxn pesos / ton,price at which gruma buys AF36 per ton of maize,600000,,900000,posnorm,INVENTADO
+af36_training,,cost to train farmers to use AF36,500,,8000,posnorm,INVENTADO
+coef_var,percent,percent of variation,10,,30,posnorm,INVENTADO
+costs_goods,mxn pesos,total costs from the region,50000,,100000,posnorm,INVENTADO
+earnings_per_ton_maize,mxn pesos / ton,how much maseca earns per ton of maize acquired,2000000,,3000000,posnorm,INVENTADO
+field_area,ha,area of harvest,74500,,83405,posnorm,Ignacio gruma
+flour_price,mxn pesos / ton,,10000,,12000,posnorm,INVENTADO
+other_maize_loss,percent,amount of maize losses for other reasons,10,,30,posnorm,Ignacio gruma
+res_and_dev_AF,mxn pesos,amount of money allocated yearly to aflatoxin research and development,800000,,900000,posnorm,Ignacio gruma
+risk_dispersion,percent,probability that the method doesn't work and the AF spreads out,1,,10,posnorm,INVENTADO
+risk_farmers_misuse,percent,probability that the farmers misuse the method and it doesn't work,15,,30,posnorm,INVENTADO
+risk_health_hazard,percent,probability that the method is a health hazard and destroys crop,1,,2,posnorm,INVENTADO
+risk_resistance,percent,probability that the maize becomes resistant to the method and it stops working,1,,5,posnorm,INVENTADO
+season_revenue_status_quo,mxn pesos,revenue from the sales but how to relate the revenue to the area ,80000000,,100000000,norm,INVENTADO
+status_quo_maize_requirement,ton,how much maize gruma needs to achieve their yearly production,300000,,600000,posnorm,INVENTADO
+total_area_harvest,ton,amount of maize harvested by the farmers in the area,521500,,583835,posnorm,Ignacio gruma

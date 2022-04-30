@@ -19,3 +19,8 @@ risk_resistance,percent,probability that the maize becomes resistant to the meth
 season_revenue_status_quo,mxn pesos,revenue from the sales but how to relate the revenue to the area ,80000000,,100000000,norm,INVENTADO
 status_quo_maize_requirement,ton,how much maize gruma needs to achieve their yearly production,300000,,600000,posnorm,INVENTADO
 total_area_harvest,ton,amount of maize harvested by the farmers in the area,521500,,583835,posnorm,Ignacio gruma
+selfst_infrastructure_costs,mxn pesos,amount of money needed to build appropriate warehouses for maize storage,1,,2,posnorm,INVENTADO
+selfst_maintenance_costs,mxn pesos,amount of money needed to maintain maize storage facilities yearly,1,,2,posnorm,INVENTADO
+selfst_personnel_costs,mxn pesos,amount of money needed for new personnel to work at the warehouses,1,,2,posnorm,INVENTADO
+selfst_equipment_costs,mxn pesos,amount of money needed for equipment and all other input for the storage warehouse,1,,2,posnorm,INVENTADO
+selfst_maizetransport_costs,mxn pesos,amount of money needed to transport maize from farmers to self-storage warehouses,1,,3,posnorm,INVENTADO

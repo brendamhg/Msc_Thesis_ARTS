@@ -22,7 +22,8 @@ AF_cost_benefit_risk_simulation <- function () {
   var_CV = coef_var, n = n_seasons)
   
   local_price <- 6200
-  # local price is the price at which MASECA buys maize in the AF infested state in MX, it is constant, in mxn/ton
+  # local price is the price at which MASECA buys maize in the AF infested state in MX, 
+  # it is constant, in mxn/ton
   
   AF_maize_loss_status_quo <- 100
   # in status quo, 100% of the maize is loss by aflatoxins. it is a percentage, constant
@@ -90,7 +91,7 @@ status_quo_benefits <-
   # AF36 option ----
     #### AF36 option costs ----
   
-  farmers_maize_AF36 <- (farmers_maize * af36_maize_loss)
+  farmers_maize_AF36 <- ((farmers_maize * (1 - af36_maize_loss_field)) * (1 - af36_maize_loss_storage))
   
   imported_maize_AF36 <- status_quo_maize_requirement - farmers_maize_AF36
   
@@ -131,10 +132,10 @@ status_quo_benefits <-
   
   #### AF36 option risks ----
   
-  AF36_farmers_misuse_risk <- chance_event (risk_farmers_misuse, value_if = 0, n = n_seasons)
-  AF36_resistance_risk <- chance_event (risk_resistance, value_if = 1, n = n_seasons)
-  AF36_health_hazard_risk <- chance_event (risk_health_hazard, value_if = 1, n = n_seasons)
-  AF36_dispersion_risk <- chance_event (dispersion_risk, value_if = 0, n = n_seasons)
+  AF36_farmers_misuse_risk <- chance_event (risk_af36_farmers_misuse, value_if = 0, n = n_seasons)
+  AF36_resistance_risk <- chance_event (risk_af36_resistance, value_if = 1, n = n_seasons)
+  AF36_health_hazard_risk <- chance_event (risk_af36_health_hazard, value_if = 1, n = n_seasons)
+  AF36_dispersion_risk <- chance_event (risk_af36_dispersion, value_if = 0, n = n_seasons)
   
   # AF36 total risk
   AF36_total_risk <- (AF36_farmers_misuse_risk * AF36_resistance_risk * 
@@ -151,7 +152,68 @@ status_quo_benefits <-
   final_values_AF36 <-
     discount(x = AF36_total_pre_discount, discount_rate = discount_rate, calculate_NPV = TRUE)
   
-  return(list(status_quo = final_values_status_quo))
+  # Self-storage option ----
+  # we take the status quo values and add self-storage costs into costs 
+  
+  ### Self-storage costs ----
+  # we split farmers maize losses from field and storage
+  
+  farmers_maize_selfst <- ((farmers_maize * (1 - selfst_maize_loss_field)) * (1 - selfst_maize_loss_storage))
+  
+  imported_maize_selfst <- status_quo_maize_requirement - farmers_maize_selfst
+  
+  seasonal_maize_expense_selfst <- 
+    vv (var_mean = ((farmers_maize_selfst * local_price) + (imported_maize_selfst * import_price)),
+        var_CV = coef_var, n = n_seasons)
+  
+  # we take status quo cost values and add self-storage costs as vv
+  # we keep the same r&d costs because the research currently done is for the field stage
+  
+  seasonal_maize_loss_AF_cost_selfst <- 
+    vv ((var_mean = (selfst_maize_loss_field * farmers_maize) * earnings_per_ton_maize), 
+        var_CV = coef_var, n = n_seasons)
+  
+  selfst_costs1 <- 
+    vv (var_mean = (seasonal_maize_expense_selfst + 
+        selfst_equipment_costs + selfst_infrastructure_costs + 
+        selfst_maintenance_costs + selfst_maizetransport_costs + 
+        selfst_personnel_costs),
+        var_CV = coef_var, n = n_seasons)
+  
+  selfst_costs2 <- 
+    seasonal_res_and_dev_AF_cost + seasonal_maize_loss_AF_cost_selfst
+  
+  selfst_cost <- selfst_costs1 + selfst_costs2
+  
+  ### Self-storage benefits ----
+  
+ additional_sales_selfst <- (season_revenue_status_quo - (farmers_maize_selfst * earnings_per_ton_maize))
+  
+   season_revenue_selfst <- season_revenue_status_quo + additional_sales_selfst
+  
+  selfst_benefits <- 
+    vv (var_mean = (season_revenue_selfst - costs_goods),
+        var_CV = coef_var, n = n_seasons)
+  
+  ### Self-storage risks ----
+  
+  selfst_outbreak_risk <- chance_event (risk_selfst_outbreak, value_if = 0, n = n_seasons)
+ 
+  selfst_risks <- selfst_outbreak_risk
+
+  ### Self-storage total pre discount ----
+  
+  selfst_total_pre_discount <- 
+    ((selfst_benefits - selfst_costs) * selfst_risks)
+  
+  
+  ###### Self-storage final values ----
+  
+  final_values_selfst <-
+    discount(x = selfst_total_pre_discount, discount_rate = discount_rate, calculate_NPV = TRUE)
+  
+  
+  return(list(status_quo = final_values_status_quo, final_values_AF36, final_values_selfst))
   # return list indicates any outcome you wish to see from the model
   }
   

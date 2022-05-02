@@ -1,26 +1,33 @@
-variable,units,description,lower,median,upper,distribution,source
-AF_maize_loss,percent,seasonal maize loss by AF,99,,100,posnorm,Ignacio gruma
-af36_concentration_need,microg AF36/kg maize,optimal concentration of AF36 to be added to the fields,1,,5,posnorm,INVENTADO
-af36_distribution,mxn,cost for gruma to distribute ,20000,,50000,posnorm,INVENTADO
-36_maize_loss,percent,seasonal maize loss by AF with AF36 implementation,1,,50,posnorm,INVENTADO
-af36_purchase_price,mxn pesos / ton,price at which gruma buys AF36 per ton of maize,600000,,900000,posnorm,INVENTADO
-af36_training,,cost to train farmers to use AF36,500,,8000,posnorm,INVENTADO
-coef_var,percent,percent of variation,10,,30,posnorm,INVENTADO
-costs_goods,mxn pesos,total costs from the region,50000,,100000,posnorm,INVENTADO
-earnings_per_ton_maize,mxn pesos / ton,how much maseca earns per ton of maize acquired,2000000,,3000000,posnorm,INVENTADO
-field_area,ha,area of harvest,74500,,83405,posnorm,Ignacio gruma
-flour_price,mxn pesos / ton,,10000,,12000,posnorm,INVENTADO
-other_maize_loss,percent,amount of maize losses for other reasons,10,,30,posnorm,Ignacio gruma
-res_and_dev_AF,mxn pesos,amount of money allocated yearly to aflatoxin research and development,800000,,900000,posnorm,Ignacio gruma
-risk_dispersion,percent,probability that the method doesn't work and the AF spreads out,1,,10,posnorm,INVENTADO
-risk_farmers_misuse,percent,probability that the farmers misuse the method and it doesn't work,15,,30,posnorm,INVENTADO
-risk_health_hazard,percent,probability that the method is a health hazard and destroys crop,1,,2,posnorm,INVENTADO
-risk_resistance,percent,probability that the maize becomes resistant to the method and it stops working,1,,5,posnorm,INVENTADO
-season_revenue_status_quo,mxn pesos,revenue from the sales but how to relate the revenue to the area ,80000000,,100000000,norm,INVENTADO
-status_quo_maize_requirement,ton,how much maize gruma needs to achieve their yearly production,300000,,600000,posnorm,INVENTADO
-total_area_harvest,ton,amount of maize harvested by the farmers in the area,521500,,583835,posnorm,Ignacio gruma
-selfst_infrastructure_costs,mxn pesos,amount of money needed to build appropriate warehouses for maize storage,1,,2,posnorm,INVENTADO
-selfst_maintenance_costs,mxn pesos,amount of money needed to maintain maize storage facilities yearly,1,,2,posnorm,INVENTADO
-selfst_personnel_costs,mxn pesos,amount of money needed for new personnel to work at the warehouses,1,,2,posnorm,INVENTADO
-selfst_equipment_costs,mxn pesos,amount of money needed for equipment and all other input for the storage warehouse,1,,2,posnorm,INVENTADO
-selfst_maizetransport_costs,mxn pesos,amount of money needed to transport maize from farmers to self-storage warehouses,1,,3,posnorm,INVENTADO
+variable,units,description,lower,median,upper,distribution,source,
+AF_maize_loss_status_quo,percent,seasonal maize loss by AF in status quo,99,,100,posnorm,Ignacio gruma,X
+af36_concentration_need,microg AF36/kg maize,optimal concentration of AF36 to be added to the fields,1,,5,posnorm,INVENTADO,X
+af36_distribution,mxn,cost for gruma to distribute ,20000,,50000,posnorm,INVENTADO,X
+af36_maize_loss_field,percent,seasonal maize loss by AF with AF36 implementation at field stage,1,,50,posnorm,INVENTADO,X
+af36_maize_loss_storage,percent,seasonal maize loss by AF with AF36 implementation at storage stage,1,,50,posnorm,INVENTADO,X
+af36_purchase_price,mxn pesos / ton,price at which gruma buys AF36 per ton of maize,600000,,900000,posnorm,INVENTADO,X
+af36_training,,cost to train farmers to use AF36,500,,8000,posnorm,INVENTADO,X
+coef_var,percent,percent of variation,10,,30,posnorm,INVENTADO,X
+earnings_per_ton_maize,mxn pesos / ton,how much maseca earns per ton of maize acquired,2000000,,3000000,posnorm,INVENTADO,X
+field_area,ha,area of harvest,74500,,83405,posnorm,Ignacio gruma,
+incentive_additional_maize,ton,how much additional maize can be purchased per farmer that complies for incentive,1,,1000,posnorm,INVENTADO,X
+incentive_maize_loss_field,percent,seasonal maize loss by AF with no cash incentive at field stage,1,,100,posnorm,INVENTADO,X
+incentive_maize_loss_storage,percent,seasonal maize loss by AF with no cash incentive at storage stage,1,,100,posnorm,INVENTADO,X
+incentive_no_cash,mxn pesos,how much the incentive would cost per farmer,1,,20000,posnorm,INVENTADO,X
+incentive_number_farmers,mxn pesos,number of farmers that would participate in the trainings for ag. Mgt. practices,1,,100,posnorm,INVENTADO,X
+incentive_training_cost,mxn pesos,cost of training for mgt. practices for no-cash incentives,1,,10000,posnorm,INVENTADO,X
+risk_af36_dispersion,percent,probability that the method doesn't work and the AF spreads out,1,,10,posnorm,INVENTADO,X
+risk_af36_farmers_misuse,percent,probability that the farmers misuse the method and it doesn't work,15,,30,posnorm,INVENTADO,X
+risk_af36_health_hazard,percent,probability that the method is a health hazard and destroys crop,1,,2,posnorm,INVENTADO,X
+risk_selfst_outbreak,percent,probability that there is an aflatoxin outbreak in the self-storage,1,,100,posnorm,INVENTADO,X
+risk_af36_resistance,percent,probability that the maize becomes resistant to the method and it stops working,1,,5,posnorm,INVENTADO,X
+risk_incentive_fail,percent,probability that the no-cash incentive does not reduce the aflatoxin level in maize ,1,,100,posnorm,INVENTADO,X
+season_revenue_status_quo,mxn pesos,revenue from the sales but how to relate the revenue to the area ,80000000,,100000000,norm,INVENTADO,X
+selfst_equipment_costs,mxn pesos,amount of money needed for equipment and all other input for the storage warehouse,1,,2,posnorm,INVENTADO,X
+selfst_infrastructure_costs,mxn pesos,amount of money needed to build appropriate warehouses for maize storage,1,,2,posnorm,INVENTADO,X
+selfst_maintenance_costs,mxn pesos,amount of money needed to maintain maize storage facilities yearly,1,,2,posnorm,INVENTADO,X
+selfst_maize_loss_field,percent,percent of maize loss due to aflatoxins in the self-storage option at field,1,,100,posnorm,INVENTADO,X
+selfst_maize_loss_storage,percent,percent of maize loss due to aflatoxins in the self-storage option at storage,1,,100,posnorm,INVENTADO,X
+selfst_maizetransport_costs,mxn pesos,amount of money needed to transport maize from farmers to self-storage warehouses,1,,3,posnorm,INVENTADO,X
+selfst_personnel_costs,mxn pesos,amount of money needed for new personnel to work at the warehouses,1,,2,posnorm,INVENTADO,X
+status_quo_maize_requirement,ton,how much maize gruma needs to achieve their yearly production,300000,,600000,posnorm,INVENTADO,X
+total_area_harvest,ton,amount of maize harvested by the farmers in the area,521500,,583835,posnorm,Ignacio gruma,X

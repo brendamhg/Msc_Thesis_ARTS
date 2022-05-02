@@ -8,7 +8,7 @@ for(i in colnames(x)) assign(i, as.numeric(x[1,i]),envir=.GlobalEnv)}
 
 make_variables(estimate_read_csv("AF_input_table.csv")) 
 
-# model function ---- 
+# Model Function ---- 
 
 AF_cost_benefit_risk_simulation <- function () {
   coef_var = 10
@@ -16,55 +16,71 @@ AF_cost_benefit_risk_simulation <- function () {
   discount_rate = 5
   
 ## other variables ---- 
-
+  
+# farmers maize is the initial amount of maize harvested, both infected and non-infected by afs
+# it is variable, in ton
+# total area harvest is (EXACT/ESTIMATE)
+  
   farmers_maize <- 
-    vv (var_mean = (total_area_harvest - (total_area_harvest * other_maize_loss)), 
-  var_CV = coef_var, n = n_seasons)
+    vv (var_mean = (total_area_harvest), var_CV = coef_var, n = n_seasons)
   
   local_price <- 6200
-  # local price is the price at which MASECA buys maize in the AF infested state in MX, 
+  # local price is the price at which MASECA buys maize in the afs infested state in MX, 
   # it is constant, in mxn/ton
+  # it is exact
   
   AF_maize_loss_status_quo <- 100
-  # in status quo, 100% of the maize is loss by aflatoxins. it is a percentage, constant
+  # in status quo, 100% of the maize is loss by aflatoxins. 
+  # it is constant, in percentage
   
   import_price <- 7000
   # AHORITA ESTA INVENTADO, NECESITO NUMERO REAL DE IGNACIO
-  # import price is the price at which MASECA buys maize in the USA, it is constant, in mxn/ton 
+  # import price is the price at which MASECA buys maize in the USA, 
+  # it is constant, in mxn/ton 
+  # it is exact
   
   maize_yearly_seasons <- 1
-  # DATO REAL DE IGNACIO
   # number of maize seasons in a year in AF infested state
+  # it is constant, no specific unit
+  # it is exact
   
 ## status quo ---- 
   #### status quo costs ---- 
   
-  farmers_maize_status_quo <- (farmers_maize * AF_maize_loss_status_quo)
+  farmers_maize_status_quo <- (farmers_maize * (1 - AF_maize_loss_status_quo))
+  # farmers maize status quo is the total amount of maize harvested times the inverse percent 
+  # of maize lost by afs. In this case, all the maize is infected with afs.
 
-  imported_maize_status_quo <- status_quo_maize_requirement - farmers_maize_status_quo 
-  # imported maize is the difference between maize requirement and farmers maize
-  # maize requirement is X number they give me times number of seasons. 
-  # use vv if it's not a set number 
-  # add this variable to my input table 
-  # imported = required - farmers
+  status_quo_maize_requirement_variable <- vv (var_mean = status_quo_maize_requirement, 
+                                               var_CV = coef_var, n = n_seasons)
+  # status quo maize requirement is how much maize Gruma needs to meet the maize 
+  # production requirements. 
+  # it is variable, in tons
+  # it is EXACT/ESTIMATE
+  
+  imported_maize_status_quo <- status_quo_maize_requirement_variable - farmers_maize_status_quo 
+  # imported maize is how much maize Gruma will have to purchase internationally to meet
+  # the maize requirements for production. it is calculated by subtracting the amount of 
+  # maize after removing maize loss by afs from the total maize requirement for production. 
   
   seasonal_maize_expense_status_quo <- 
-    vv (var_mean = ((farmers_maize_status_quo * local_price) + (imported_maize_status_quo * import_price)),
+    vv (var_mean = ((farmers_maize_status_quo * local_price) + 
+                      (imported_maize_status_quo * import_price)),
                     var_CV = coef_var, n = n_seasons)
+  # seasonal maize expense status quo is how much Gruma spends in acquiring the maize needed
+  # for production. it is the sum of the imported maize plus the local maize purchases.
   
-  seasonal_res_and_dev_AF_cost <- 
-    vv (var_mean = (res_and_dev_AF / maize_yearly_seasons), var_CV = coef_var, n = n_seasons)
+  ###### REVISAR SI ESTO HACE SENTIDO DE LOSS BY AFS LA DE ABAJO 
   
   seasonal_maize_loss_AF_cost_status_quo <- 
     vv ((var_mean = (AF_maize_loss_status_quo * farmers_maize) * earnings_per_ton_maize), 
         var_CV = coef_var, n = n_seasons)
+  # seasonal maize loss AF cost status quo is how much money Gruma lost because of local maize
+  # lost to afs contamination. 
   
-  # add status quo costs together pre discount
-  # we don't need to say prediscount 
-  
-  status_quo_costs <- 
-    (seasonal_res_and_dev_AF_cost + seasonal_maize_expense_status_quo 
+  status_quo_costs <- (seasonal_maize_expense_status_quo 
      + seasonal_maize_loss_AF_cost_status_quo)
+  # here we add the costs of scenario together to get the total costs for status quo.
 
    #### status quo benefits ----
   # processing costs of the specific 5 tons of maize
@@ -109,8 +125,10 @@ status_quo_benefits <-
   training_AF36_cost <-
     vv (var_mean = af36_training, var_CV = coef_var, n = n_seasons)
   
+  farmers_maize_loss_AF36 <- farmers_maize_AF36 * af36_maize_loss_field * af36_maize_loss_storage
+  
   seasonal_maize_loss_cost_AF36 <- 
-    vv (var_mean = ((af36_maize_loss * farmers_maize) * earnings_per_ton_maize), var_CV = coef_var, n = n_seasons)
+    vv (var_mean = (farmers_maize_loss_AF36 * earnings_per_ton_maize), var_CV = coef_var, n = n_seasons)
   
   # add AF36 alternative costs together 
   
@@ -145,7 +163,6 @@ status_quo_benefits <-
   
   AF36_total_pre_discount <- 
     ((AF36_benefits - AF36_costs) * AF36_total_risk)
-
   
   ###### AF36 final values ----
 
@@ -153,7 +170,6 @@ status_quo_benefits <-
     discount(x = AF36_total_pre_discount, discount_rate = discount_rate, calculate_NPV = TRUE)
   
   # Self-storage option ----
-  # we take the status quo values and add self-storage costs into costs 
   
   ### Self-storage costs ----
   # we split farmers maize losses from field and storage
@@ -180,8 +196,7 @@ status_quo_benefits <-
         selfst_personnel_costs),
         var_CV = coef_var, n = n_seasons)
   
-  selfst_costs2 <- 
-    seasonal_res_and_dev_AF_cost + seasonal_maize_loss_AF_cost_selfst
+  selfst_costs2 <- seasonal_maize_loss_AF_cost_selfst
   
   selfst_cost <- selfst_costs1 + selfst_costs2
   
@@ -215,11 +230,61 @@ status_quo_benefits <-
   
   return(list(status_quo = final_values_status_quo, final_values_AF36, final_values_selfst))
   # return list indicates any outcome you wish to see from the model
+  # No-cash incentive option ----
+  ### No-cash incentive costs ----
+  
+  farmers_maize_incentive <- ((farmers_maize * (1 - incentive_maize_loss_field)) * (1 - incentive_maize_loss_storage))
+  
+  imported_maize_incentive <- status_quo_maize_requirement - farmers_maize_incentive
+  
+  seasonal_maize_expense_cost_incentive <- 
+    vv (var_mean = ((farmers_maize_incentive * total_area_harvest) + (imported_maize_incentive * import_price)), 
+        var_CV = coef_var, n = n_seasons)
+  
+  incentive_mgt_practices_cost <-
+    vv (var_mean = (incentive_training_cost * incentive_number_farmers), 
+        var_CV = coef_var, n = n_seasons)
+  
+  no_cash_incentive_cost <-
+    vv (var_mean = (incentive_no_cash * incentive_number_farmers), var_CV = coef_var, n = n_seasons)
+  
+  farmers_maize_loss_incentive <- farmers_maize_incentive * incentive_maize_loss_field * incentive_maize_loss_storage
+  
+  seasonal_maize_loss_cost_incentive <- 
+    vv (var_mean = (farmers_maize_loss_incentive * earnings_per_ton_maize), var_CV = coef_var, n = n_seasons)
+  
+  # add incentive alternative costs together 
+  
+  incentive_costs <- 
+    vv (var_mean = (seasonal_maize_expense_cost_incentive + incentive_mgt_practices_cost + 
+                      no_cash_incentive_cost + seasonal_maize_loss_cost_incentive), var_CV = coef_var, n = n_seasons)
+  
+  ### No-cash incentive benefits ----
+  
+  additional_sales_incentive <-  vv (var_mean = (incentive_additional_maize * incentive_number_farmers * earnings_per_ton_maize), 
+  var_CV = coef_var, n = n_seasons)
+
+  season_revenue_incentive <- season_revenue_status_quo + additional_sales_incentive
+  
+  # add AF36 alternative benefits together 
+  AF36_benefits <- 
+    vv (var_mean = (season_revenue_AF36 - costs_goods),
+        var_CV = coef_var, n = n_seasons)
+  
+  
+  ### No-cash incentive risks ----
+  
+  incentive_fail_risk <- chance_event (risk_incentive_fail, value_if = 0, n = n_seasons)
+ 
+  # No-cash incentive total risk
+  
+  incentive_fail_total_risk <- incentive_fail_risk
+  
   }
   
    ########### END OF MODEL 
 
-# DA Analysis -----
+# Decision Analysis -----
  # you can define a different distribution shape if some values need to be taken
  # more in consideration - find it in the DA package
 AF_results <-

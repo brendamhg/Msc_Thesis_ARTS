@@ -31,3 +31,10 @@ selfst_maizetransport_costs,mxn pesos,amount of money needed to transport maize 
 selfst_personnel_costs,mxn pesos,amount of money needed for new personnel to work at the warehouses,1,,2,posnorm,INVENTADO,X
 status_quo_maize_requirement,ton,how much maize gruma needs to achieve their yearly production,300000,,600000,posnorm,INVENTADO,X
 total_area_harvest,ton,amount of maize harvested by the farmers in the area,521500,,583835,posnorm,Ignacio gruma,X
+dipstick_maize_loss_field,percent,percent of maize loss due to aflatoxins in the dipstick assay option at field,0,,100,posnorm,Ignacio gruma,X
+dipstick_maize_loss_storage,percent,percent of maize loss due to aflatoxins in the sdipstick assay option at storage,0,,100,posnorm,INVENTADO,X
+dipstick_materials_need,mxn pesos/ton ,how much money is needed per ton of maize to purchase the materials and agents needed to test with dipstick assay,0,,2,posnorm,INVENTADO,X
+dipstick_distribution,mxn pesos,cost for Gruma to distribute dispstick assay tests throughout the states needed,0,,2,posnorm,INVENTADO,X
+dipstick_training,mxn pesos,how much it costs for Gruma to train farmers to use dipstick assay testing,0,,2,posnorm,INVENTADO,X
+risk_dispstick_farmers_misuse,percent,probability that the farmers misuse the tests and more maize gets contaminated,0,,100,posnorm,INVENTADO,X
+risk_dipstick_dispersion,percent,probability that the maize in storage gets contaminated from the maize from field because of failre of testing,0,,100,posnorm,INVENTADO,X

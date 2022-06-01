@@ -401,6 +401,7 @@ status_quo_benefits <-
               selfst_total=selfst_total))
   
   # return list indicates any outcome you wish to see from the model
+  # return still doesn't work... I think?
   
 } 
  

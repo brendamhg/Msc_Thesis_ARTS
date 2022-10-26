@@ -155,7 +155,7 @@ status_quo_benefits <-
   #### AF36 total  ----
   
   AF36_total <- 
-    ((AF36_benefits * AF36_total_risk) -  AF36_costs)
+    (((AF36_benefits * AF36_total_risk) -  AF36_costs) - status_quo_total)
   
   # Self-storage option ----
   
@@ -219,7 +219,8 @@ status_quo_benefits <-
 
   ### Self-storage total ----
   
-  selfst_total <- ((selfst_benefits * selfst_risks) - selfst_cost)
+  selfst_total <- 
+    (((selfst_benefits * selfst_risks) - selfst_cost) - status_quo_total)
   # total amount earned from self-storage option 
   
   # No-cash incentive option ----
@@ -280,7 +281,7 @@ status_quo_benefits <-
   ### No cash incentive total ----
   
   incentive_total <- 
-    ((incentive_benefits * AF36_total_risk) - incentive_costs)
+    (((incentive_benefits * AF36_total_risk) - incentive_costs) - status_quo_total)
   
   # Dipstick assay pre-storage option ----
   
@@ -352,7 +353,7 @@ status_quo_benefits <-
   #### Dipstick assay total  ----
   
   dipstick_total <- 
-    ((dipstick_benefits * dipstick_total_risk) - dipstick_costs)
+    (((dipstick_benefits * dipstick_total_risk) - dipstick_costs) - status_quo_total)
   
   # Discount rate  ----
   

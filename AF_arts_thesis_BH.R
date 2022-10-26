@@ -2,9 +2,9 @@
 library(decisionSupport)
 
 # function to test incomplete model as we go ----
-make_variables<-function(est,n=1)
-{ x<-random(rho=est, n=n)
-for(i in colnames(x)) assign(i, as.numeric(x[1,i]),envir=.GlobalEnv)}
+#make_variables<-function(est,n=1)
+#{ x<-random(rho=est, n=n)
+#for(i in colnames(x)) assign(i, as.numeric(x[1,i]),envir=.GlobalEnv)}
 
 make_variables(estimate_read_csv("AF_input_table.csv")) 
 
@@ -14,6 +14,8 @@ make_variables(estimate_read_csv("AF_input_table.csv"))
 # (storing only tested and clean maize). Each option goes through costs, benefits, and risks. 
 # At the end of each option we get the total value for NPV per option. At the end of the 
 # model we include the risks that affect all options, plus the discount. 
+
+
 
 AF_cost_benefit_risk_simulation <- function () {
  
@@ -399,10 +401,8 @@ status_quo_benefits <-
               selfst_cost=selfst_cost,
               selfst_benefits=selfst_benefits,
               selfst_total=selfst_total))
-  
-  # return list indicates any outcome you wish to see from the model
-  # return still doesn't work... I think?
-  
+
+
 } 
  
    ########### END OF MODEL 
@@ -413,29 +413,72 @@ status_quo_benefits <-
 AF_results <-
   mcSimulation(estimate = estimate_read_csv("AF_input_table.csv"),
                model_function = AF_cost_benefit_risk_simulation,
-               numberOfModelRuns = 100,
+               numberOfModelRuns = 10000,
                functionSyntax = ("plainNames"))
+# here we are doing a mini montecarlo of 100 runs to figure things out
 
 decisionSupport::plot_distributions(mcSimulation_object = AF_results, 
                                     vars = c("discounted_incentive_total", 
                                              "discounted_status_quo_total",
                                               "discounted_AF36_total",
+                                             "discounted_selfst_total",
+                                             "discounted_dipstick_total"),
+                                    method = 'smooth_simple_overlay', 
+                                    base_size = 7)
+# here we are looking at the distribution of the NPV values of all decisions
+
+decisionSupport::plot_distributions(mcSimulation_object = AF_results, 
+                                    vars = c("discounted_dipstick_total", 
+                                             "discounted_status_quo_total",
+                                             "discounted_AF36_total",
                                              "discounted_selfst_total"),
                                     method = 'smooth_simple_overlay', 
                                     base_size = 7)
 
-##  "discounted_dipstick_total"
+# remove dipstick option for less ridiculous results 
 
-##############
+#Projection to Latent Structures (PLS) analysis
+pls_result <- plsr.mcSimulation(object = AF_results,
+                                resultName = names(AF_results$y)[3], ncomp = 1)
 
-AF_results <-
-  mcSimulation(estimate = estimate_read_csv("AF_input_table.csv"),
-               model_function = AF_cost_benefit_risk_simulation,
-               numberOfModelRuns = 100,
-               functionSyntax = ("plainNames"))
+
+input_table <- read.csv("AF_input_table.csv")
+
+plot_pls(pls_result, input_table = input_table, threshold = 0)
+
+# Value of Information (VoI) analysis
+
+mcSimulation_table <- data.frame(AF_results$x, AF_results$y[1:3])
+
+evpi <- multi_EVPI(mc = "AF_input_table.csv", first_out_var = "discounted_status_quo_total")
+
+plot_evpi(evpi, devision_vars = "discounted_AF36_total")
+
+# boxplots
+decisionSupport::plot_distributions(mcSimulation_object = AF_results, 
+                                    vars = c("discounted_selfst_total",
+                                             "discounted_incentive_total", 
+                                                      "discounted_status_quo_total",
+                                                      "discounted_AF36_total",
+                                                    "discounted_dipstick_total"),
+                                    method = 'boxplot')
+
 
 decisionSupport::plot_distributions(mcSimulation_object = AF_results, 
-                                    vars = c("selfst_maize_loss_field", "dipstick_maize_loss_field",
-                                             "incentive_maize_loss_field", "af36_maize_loss_field"),
-                                    method = 'smooth_simple_overlay', 
-                                    base_size = 7)
+                                    vars = c("af36_maize_loss_field", 
+                                             "dipstick_maize_loss_field",
+                                             "incentive_maize_loss_field",
+                                             "selfst_maize_loss_field"),
+                                    method = 'boxplot')
+
+decisionSupport::plot_distributions(mcSimulation_object = AF_results, 
+                                    vars = c("af36_maize_loss_storage", 
+                                             "dipstick_maize_loss_storage",
+                                             "incentive_maize_loss_storage",
+                                             "selfst_maize_loss_storage"),
+                                    method = 'boxplot')
+
+decisionSupport:: plot_cashflow(mcSimulation_object = AF_results,
+                                cashflow_var_name = "discounted_status_quo_total")
+                            
+
